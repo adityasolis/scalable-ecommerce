@@ -18,7 +18,14 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: 1212  
       DB_ROOT_PASSWORD: 1212
-
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'  # Limit CPU usage
+          memory: 512M  # Limit memory usage
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   mysql:
     image: mysql:8.0
