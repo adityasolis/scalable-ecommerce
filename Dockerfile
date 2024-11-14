@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY composer.json ./
 
 # Run composer install to install PHP dependencies
-RUN composer install --no-scripts --no-autoloader
+RUN composer install
 
 # Copy package.json for Node.js dependencies
 COPY package.json ./
