@@ -51,6 +51,9 @@ RUN a2ensite Portfolio && a2dissite 000-default
 # Enable mod_rewrite (if you're using it for URL rewriting)
 RUN a2enmod rewrite
 
+# Set the ServerName to your IP address (for production use)
+RUN echo "ServerName 65.2.69.107" >> /etc/apache2/apache2.conf
+
 # Expose port 80 (this will be used for the web server inside the container)
 EXPOSE 80
 
