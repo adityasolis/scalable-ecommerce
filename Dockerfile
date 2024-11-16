@@ -40,7 +40,9 @@ COPY . .
 # Set permissions for the web root directory
 RUN chown -R www-data:www-data /var/www/html && \
     find /var/www/html -type d -exec chmod 755 {} \; && \
-    find /var/www/html -type f -exec chmod 644 {} \;
+    find /var/www/html -type f -exec chmod 644 {} \; && \
+    chown -R www-data:www-data /var/www/html/public && \
+    chmod -R 755 /var/www/html/public
 
 # Copy the Apache virtual host configuration file
 COPY Portfolio.conf /etc/apache2/sites-available/Portfolio.conf
