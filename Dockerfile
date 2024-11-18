@@ -19,16 +19,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     mariadb-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) zip gd pdo_mysql \
-    && curl -sS https://getcomposer.org/installer | php \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy composer.json and composer.lock for PHP dependencies
 COPY composer.json ./
 
-# Run composer install to install PHP dependencies
-RUN composer install --no-scripts --no-autoloader
+# Run composer install to install PHP dependencies without scripts and autoloader
+RUN php /usr/local/bin/composer install --no-scripts --no-autoloader
 
-RUN composer update
+# Update Composer dependencies and generate autoload files
+RUN php /usr/local/bin/composer update
+
 # Copy package.json for Node.js dependencies
 COPY package.json ./
 
@@ -55,7 +57,7 @@ RUN a2ensite Portfolio && a2dissite 000-default
 RUN a2enmod rewrite
 
 # Set the ServerName to your IP address (for production use)
-RUN echo "ServerName 13.232.69.197 " >> /etc/apache2/apache2.conf
+RUN echo "ServerName 13.232.69.197" >> /etc/apache2/apache2.conf
 
 # Expose port 80 (this will be used for the web server inside the container)
 EXPOSE 80
