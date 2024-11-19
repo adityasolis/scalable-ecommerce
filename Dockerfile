@@ -25,11 +25,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy composer.json and composer.lock for PHP dependencies
 COPY composer.json ./
 
-# Run composer install to install PHP dependencies without scripts and autoloader
-RUN php /usr/local/bin/composer install --no-scripts --no-autoloader
-
-# Update Composer dependencies and generate autoload files
-RUN php /usr/local/bin/composer update
+# Run composer install to install PHP dependencies
+RUN composer install --no-scripts --no-autoloader
 
 # Copy package.json for Node.js dependencies
 COPY package.json ./
@@ -43,9 +40,7 @@ COPY . .
 # Set permissions for the web root directory
 RUN chown -R www-data:www-data /var/www/html && \
     find /var/www/html -type d -exec chmod 755 {} \; && \
-    find /var/www/html -type f -exec chmod 644 {} \; && \
-    chown -R www-data:www-data /var/www/html/public && \
-    chmod -R 755 /var/www/html/public
+    find /var/www/html -type f -exec chmod 644 {} \;
 
 # Copy the Apache virtual host configuration file
 COPY Portfolio.conf /etc/apache2/sites-available/Portfolio.conf
@@ -55,9 +50,6 @@ RUN a2ensite Portfolio && a2dissite 000-default
 
 # Enable mod_rewrite (if you're using it for URL rewriting)
 RUN a2enmod rewrite
-
-# Set the ServerName to your IP address (for production use)
-RUN echo "ServerName 13.232.69.197" >> /etc/apache2/apache2.conf
 
 # Expose port 80 (this will be used for the web server inside the container)
 EXPOSE 80
