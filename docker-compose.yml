@@ -6,7 +6,7 @@ services:
       context: .
     container_name: php-apache
     ports:
-      - "8080:80"
+      - "8080:80"  # Keep this for internal communication
     volumes:
       - ./apache-config/ports.conf:/etc/apache2/ports.conf
     depends_on:
@@ -21,8 +21,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.5'  # Limit CPU usage
-          memory: 512M  # Limit memory usage
+          cpus: '0.5'  
+          memory: 512M  
         reservations:
           cpus: '0.25'
           memory: 256M
@@ -37,10 +37,15 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     
+  nginx:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"  # Route HTTP traffic to Nginx
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro  # Enable Nginx to read Docker events
+    depends_on:
+      - php-apache
 
 volumes:
   db_data:
-
-
-
-
