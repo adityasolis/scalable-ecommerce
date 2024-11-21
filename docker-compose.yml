@@ -6,7 +6,7 @@ services:
       context: .
     container_name: php-apache
     ports:
-      - "8080:80"  # Keep this for internal communication
+      - "80:80"  # Keep this for internal communication
     volumes:
       - ./apache-config/ports.conf:/etc/apache2/ports.conf
     depends_on:
@@ -36,16 +36,6 @@ services:
       MYSQL_PASSWORD: 1212
     volumes:
       - db_data:/var/lib/mysql
-    
-  nginx:
-    image: jwilder/nginx-proxy
-    container_name: nginx-proxy
-    ports:
-      - "8080:80"  # Route HTTP traffic to Nginx
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro  # Enable Nginx to read Docker events
-    depends_on:
-      - php-apache
-
+      
 volumes:
   db_data:
