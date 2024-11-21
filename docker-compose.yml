@@ -41,7 +41,7 @@ services:
     image: jwilder/nginx-proxy
     container_name: nginx-proxy
     ports:
-      - "80:80"  # Route HTTP traffic to Nginx
+      - "8080:80"  # Route HTTP traffic to Nginx
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro  # Enable Nginx to read Docker events
     depends_on:
